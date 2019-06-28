@@ -16,12 +16,12 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package org.tinyStats.cardinality.int64;
+package org.tinyStats.util;
 
 /**
  * A select implementation with guaranteed O(1) query time. This is a copy of
  * the (very good) implementation in Sux4J it.unimi.dsi.sux4j.bits.SimpleSelect
- * by Sebastiano Vigna (see copyright), with a custom serialization format.
+ * by Sebastiano Vigna (see copyright).
  */
 public class Select {
 

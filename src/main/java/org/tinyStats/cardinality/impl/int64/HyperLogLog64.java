@@ -1,4 +1,4 @@
-package org.tinyStats.cardinality.int64;
+package org.tinyStats.cardinality.impl.int64;
 
 import org.tinyStats.cardinality.CardinalityEstimator;
 
@@ -22,7 +22,7 @@ public class HyperLogLog64 implements CardinalityEstimator {
     }
 
     static long add(long data, long hash) {
-        int z = Long.numberOfLeadingZeros(hash) - 2;
+        int z = Long.numberOfLeadingZeros(hash);
         if (z > 0) {
             int i = (int) (hash & 15);
             if (i < 12) {
@@ -38,17 +38,25 @@ public class HyperLogLog64 implements CardinalityEstimator {
     }
 
     static long estimate(long data) {
-        double m = 12;
-        double am = 0.876;
-        // 16: 0.673; 32: 0.697; 64: 0.709
         double sum = 0;
         long x = data;
-//System.out.println(Long.toHexString(x));            
+        int countZero = 0;
         for (int i = 0; i < 12; i++) {
-            sum += 1. / (1L << (3 + (x & 0x1f)));
+            long n = x & 0x1f;
+            countZero += n == 0 ? 1 : 0;
+            sum += 1. / (1L << (1 + n));
             x >>>= 5;
         }
-        return (long) (1. / sum * am * m * m);
+        double est;
+        if (countZero > 0) {
+            // linear counting
+            int m = 12;
+            // est = 2.1 * m * Math.log((double) m / countZero);
+            est = 1.9 * m * Math.log((double) m / countZero);
+        } else {
+            return (long) (1. / sum * 0.876 * 12 * 12);
+        }
+        return Math.max(1, (long) est);
     }
     
 }

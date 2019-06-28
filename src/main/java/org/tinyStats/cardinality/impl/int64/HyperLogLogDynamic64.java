@@ -1,6 +1,7 @@
-package org.tinyStats.cardinality.int64;
+package org.tinyStats.cardinality.impl.int64;
 
 import org.tinyStats.cardinality.CardinalityEstimator;
+import org.tinyStats.util.Select;
 
 /**
  * Cardinality estimation with the HyperLogLog algorithm, using the tail cut

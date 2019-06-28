@@ -1,4 +1,4 @@
-package org.tinyStats.cardinality.int64;
+package org.tinyStats.cardinality.impl.int64;
 
 import org.tinyStats.cardinality.CardinalityEstimator;
 

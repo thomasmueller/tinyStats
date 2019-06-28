@@ -1,4 +1,6 @@
-package org.tinyStats.cardinality;
+package org.tinyStats.cardinality.impl;
+
+import org.tinyStats.cardinality.CardinalityEstimator;
 
 /**
  * Cardinality estimation with the HyperBitBit algorithm as described in a
