@@ -8,12 +8,8 @@ import org.tinyStats.cardinality.CardinalityEstimator;
  * 
  * The implementation is very simple and fast. It is very good for cardinalities
  * up to about 200, but is not usable for higher cardinalities, when most bits
- * are set. It reports a cardinality of 512, which basically means "probably
- * more than 300".
- * 
- * A hybrid algorithm could be made with this and e.g. HyperLogLog, using a one
- * bit "switch". But such a hybrid would be "order dependent", like HyperBitBit,
- * specially for cardinalities between 200 and about 1000.
+ * are set. If it reports a cardinality of 512, it means "probably more than
+ * 300".
  */
 public class LinearCounting64 implements CardinalityEstimator {
     

@@ -1,7 +1,6 @@
 package org.tinyStats.cardinality.impl.int64;
 
 import org.tinyStats.cardinality.CardinalityEstimator;
-import org.tinyStats.util.Select;
 
 /**
  * Cardinality estimation with the HyperLogLog algorithm, using the tail cut
@@ -17,7 +16,7 @@ import org.tinyStats.util.Select;
  * times can change the internal state. However, unlike in HyperBitBit, here the
  * effect is minimal: usually less than 1%.
  */
-public class HyperLogLogDynamic64 implements CardinalityEstimator {
+public class HyperLogLog4TailCut64 implements CardinalityEstimator {
 
     private long data;
 
@@ -33,12 +32,9 @@ public class HyperLogLogDynamic64 implements CardinalityEstimator {
     
     static long add(long data, long hash) {
         int base = (int) (data & 0xf);
-        int z = Long.numberOfLeadingZeros(hash) - base;
+        int z = Long.numberOfLeadingZeros(hash) + 1 - base;
         if (z > 0) {
-            int i = (int) (hash & 15);
-            if (i == 0) {
-                return data;
-            }
+            int i = 1 + (int) (((hash & 0xffffffffL) * 15) >>> 32);
             int shift = 4 * i;
             long old = (data >>> shift) & 0xf;
             long m = Math.min(0xf, Math.max(z,  old));
@@ -55,20 +51,7 @@ public class HyperLogLogDynamic64 implements CardinalityEstimator {
         }
         return data;
     }
-
-    static long insert(long c, int bitsBefore) {
-        if ((c & 0xc000000000000000L) != 0) {
-            // an overflow entry, or overflowing now
-        }
-        int before = Select.selectInLong((c << 1) | 1, bitsBefore);
-        int insertAt = before;
-        long mask = (1L << insertAt) - 1;
-        long left = c & ~mask;
-        long right = c & mask;
-        c = (left << 1) | (1 << insertAt) | right;
-        return c;
-    }
-
+    
     static long estimate(long data) {
         long base = 1 + (data & 0xf);
         double sum = 0;
@@ -78,18 +61,18 @@ public class HyperLogLogDynamic64 implements CardinalityEstimator {
             x >>>= 4;
             long n = x & 0xf;
             countZero += n == 0 ? 1 : 0;
-            sum += 1. / (1L << (base + n));
+            sum += 1. / (1L << (base - 1 + n));
         }
         double est;
         if (base <= 1 && countZero > 0) {
             // linear counting
             int m = 15;
-            // est = 2.1 * m * Math.log((double) m / countZero);            
-            est = 1.9 * m * Math.log((double) m / countZero);            
+            est = 15 * 0.95 * Math.log((double) m / countZero);            
         } else {
-            est = 15 * 15 * 0.715 / sum;
+            est = 15 * 15 * 0.62 / sum;
         }
         return Math.max(1, (long) est);
     }
+
     
 }

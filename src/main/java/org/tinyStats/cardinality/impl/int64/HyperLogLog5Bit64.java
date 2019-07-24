@@ -7,7 +7,7 @@ import org.tinyStats.cardinality.CardinalityEstimator;
  * 
  * Uses 12 counters of 5 bits each, so 4 bits are unused.
  */
-public class HyperLogLog64 implements CardinalityEstimator {
+public class HyperLogLog5Bit64 implements CardinalityEstimator {
 
     private long data;
     
