@@ -19,7 +19,18 @@ public interface CountSketch {
      * was added). This method might be a bit slow (use floating point operations
      * and loops).
      * 
-     * @return the estimated number of times the entry was added
+     * @return 0 if the entry is likely not frequent, otherwise some number > 0,
+     *         where the exact meaning depends on the algorithm
      */
     long estimate(long hash);
+    
+    /**
+     * Estimate the repeat rate (also called second frequency moment, F2, or
+     * homogeneity). A low value means each distinct entry appears roughly the same
+     * number of times, and a high value means the distribution is very skewed.
+     * 
+     * @return the repeat rate, or 0 if not known
+     */
+    long estimateRepeatRate();
+
 }

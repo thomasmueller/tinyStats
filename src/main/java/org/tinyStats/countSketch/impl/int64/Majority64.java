@@ -10,18 +10,17 @@ import org.tinyStats.countSketch.CountSketch;
  * 
  * The estimate is 1 for the identified element, and 0 otherwise. 
  */
-public class MajorityElement64 implements CountSketch {
+public class Majority64 implements CountSketch {
 
+    // upper 32 bits: count
+    // lower 32 bits: hash
     private long state;
     
     @Override
     public void add(long hash) {
-        int oldHash = (int) state;
-        if (oldHash  == 0) {
-            state = (1L << 32) + (int) hash;
-            return;
-        }
-        if (oldHash == (int) hash) {
+        if (state >>> 32 == 0) {
+            state = (1L << 32) | (hash & 0xffffffffL);
+        } else if ((int) state == (int) hash) {
             state += (1L << 32);
         } else {
             state -= (1L << 32);
@@ -32,5 +31,11 @@ public class MajorityElement64 implements CountSketch {
     public long estimate(long hash) {
         return (int) state == (int) hash ? 1 : 0;
     }
+    
+    @Override
+    public long estimateRepeatRate() {
+        return 0;
+    }
+    
 
 }

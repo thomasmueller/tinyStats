@@ -5,22 +5,22 @@ import java.util.Arrays;
 import org.tinyStats.countSketch.CountSketch;
 
 public class PartList implements CountSketch {
-        byte[] data = new byte[8];
-        long count;
+    byte[] data = new byte[8];
+    long count;
 
-        @Override
-        public void add(long hash) {
-            int zeros = Long.numberOfTrailingZeros(count++);
-            for (int i = 7; i >= 0; i--) {
-                if ((data[i] & 0xff) == (hash & 0xff)) {
-                    if (i < 7 && zeros > i) {
-                        data[i] = data[i + 1];
-                        data[i + 1] = (byte) (hash & 0xff);
-                    }
-                    break;
+    @Override
+    public void add(long hash) {
+        int zeros = Long.numberOfTrailingZeros(count++);
+        for (int i = 7; i >= 0; i--) {
+            if ((data[i] & 0xff) == (hash & 0xff)) {
+                if (i < 7 && zeros > i) {
+                    data[i] = data[i + 1];
+                    data[i + 1] = (byte) (hash & 0xff);
                 }
+                break;
             }
-            data[0] = (byte) hash;
+        }
+        data[0] = (byte) hash;
 //            for(int m = 0; m <= zeros / 4; m++) {
 //                int b = (int) count++;
 //                int d = data[0] & 0xff;
@@ -33,19 +33,25 @@ public class PartList implements CountSketch {
 //                    }
 //                }            
 //            }
-        }
-        
-        public String toString() {
-            return Arrays.toString(data);
-        }
-
-        @Override
-        public long estimate(long hash) {
-            for (int i = 7; i >= 0; i--) {
-                if ((data[i] & 0xff) == (hash & 0xff)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
     }
+
+    public String toString() {
+        return Arrays.toString(data);
+    }
+
+    @Override
+    public long estimate(long hash) {
+        for (int i = 7; i >= 0; i--) {
+            if ((data[i] & 0xff) == (hash & 0xff)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public long estimateRepeatRate() {
+        return 0;
+    }
+
+}

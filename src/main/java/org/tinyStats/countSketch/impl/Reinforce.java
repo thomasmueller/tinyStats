@@ -24,23 +24,23 @@ public class Reinforce implements CountSketch {
             }
             if (minSimilarity > 0) {
                 int d = data[minSimilarityI] & 0xffff;
-                for(int i=0; i<16; i++) {
+                for (int i = 0; i < 16; i++) {
                     int b = (int) ((i + count) & 0xf);
                     if ((((d ^ hash) >>> b) & 1) == 1) {
                         d ^= 1L << b;
                         data[minSimilarityI] = (short) d;
-    long diff = ((data[minSimilarityI] & 0xffff) ^ hash) & 0xffff;
-    int similarity = Long.bitCount(diff);
-    if (similarity != minSimilarity - 1) {
-        System.out.println("??");
-    }
+                        long diff = ((data[minSimilarityI] & 0xffff) ^ hash) & 0xffff;
+                        int similarity = Long.bitCount(diff);
+                        if (similarity != minSimilarity - 1) {
+                            System.out.println("??");
+                        }
                         break;
                     }
                 }
             }
-        }                
+        }
     }
-    
+
     public String toString() {
         return Arrays.toString(data);
     }
@@ -57,4 +57,10 @@ public class Reinforce implements CountSketch {
         }
         return minSimilarity;
     }
+
+    @Override
+    public long estimateRepeatRate() {
+        return 0;
+    }
+
 }

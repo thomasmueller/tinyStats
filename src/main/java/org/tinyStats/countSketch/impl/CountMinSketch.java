@@ -80,4 +80,10 @@ public class CountMinSketch implements CountSketch {
             double avg = sum / 16.;
             return (int) (100 * Math.pow(2, min - avg));
         }
-    }
+
+        @Override
+        public long estimateRepeatRate() {
+            return 0;
+        }
+        
+}

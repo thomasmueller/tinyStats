@@ -7,3 +7,7 @@ Statistics about data:
 * Frequent item detection using CountMinSketch,...
 * Frequent item detection using 64 bit of state
 * Approximate counting (TODO)
+
+## Similar Libraries
+
+https://github.com/mayconbordin/streaminer

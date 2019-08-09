@@ -20,4 +20,5 @@ public interface CardinalityEstimator {
      * @return the estimated number of distinct entries
      */
     long estimate();
+
 }
