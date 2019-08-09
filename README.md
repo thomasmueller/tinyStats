@@ -8,6 +8,6 @@ Statistics about data:
 * Frequent item detection using 64 bit of state
 * Approximate counting (TODO)
 
-## Similar Libraries
+## Similar Libraries
 
-https://github.com/mayconbordin/streaminer
+* https://github.com/mayconbordin/streaminer
