@@ -12,7 +12,6 @@ public class CountMinSketch2 implements CountSketch {
     final static int B2 = 5;
     final static int M2 = 31;
     long count;
-//        long data;
     int[] data = new int[32];
 
     @Override
@@ -53,6 +52,7 @@ public class CountMinSketch2 implements CountSketch {
         data[minShift] = min + 1;
     }
 
+    @Override
     public String toString() {
         return Arrays.toString(data);
     }

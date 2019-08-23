@@ -39,6 +39,7 @@ public class TestCountSketch {
                         for (int i = 0; i < 3; i++) {
                             long e2 = est.estimate(Hash.hash64(x + i));
                             if (e2 == 0 && (100. * counts[i] / size) > 50) {
+                                // error reporting
                                 System.out.println("??" + Long.toHexString(x));
                                 CountSketch est2 = type.construct();
                                 for (int j = 0; j < size; j++) {
@@ -47,11 +48,9 @@ public class TestCountSketch {
                                 int[] counts2 = getCounts(data);
                                 long e3 = est.estimate(Hash.hash64(x + i));
                                 System.out.println("e3 " + e3);
-                                
-                                
                             }
                             System.out.println("  " + i + " est " + e2 + " got " + counts[i] + " "
-                                    + (100. * counts[i] / size) + "%");
+                                    + (100. * counts[i] / size) + "% repeatRate " + est.estimateRepeatRate());
                         }
                     }
                 }
