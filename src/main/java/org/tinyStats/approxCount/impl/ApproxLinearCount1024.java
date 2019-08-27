@@ -7,7 +7,7 @@ import org.tinyStats.approxCount.ApproxCount;
  * same entries, the count goes back to 0.
  *
  * Relative accuracy is relatively bad if there are few entries, and gets better
- * the more entries.
+ * with more entries.
  */
 public class ApproxLinearCount1024 implements ApproxCount {
 
