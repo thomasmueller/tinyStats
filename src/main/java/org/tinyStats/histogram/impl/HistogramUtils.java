@@ -14,12 +14,14 @@ public class HistogramUtils {
      * 524288..4194303 -> 7,
      * 4194304..33554431 -> 8,
      * 33554432..268435455 -> 9,
-     * 268435456..2147483647 -> 10,
-     * everything else -> 11
+     * everything else -> 10
+     *
+     * @param length the length
+     * @return the bucket (0..10)
      */
-    public static int lengthTo12Buckets(long length) {
+    public static int lengthTo11Buckets(long length) {
         int logLength = Math.max(0, 63 - Long.numberOfLeadingZeros(length));
-        int bucket = Math.min(11, (logLength + 2) / 3);
+        int bucket = Math.min(10, (logLength + 2) / 3);
         return bucket;
     }
 

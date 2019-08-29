@@ -9,14 +9,14 @@ import org.tinyStats.util.Hash;
 public class TestHistogram {
 
     public static void main(String... args) {
-        test(12);
+        test(11);
     }
 
     private static void test(int bucketCount) {
         for (HistogramType type : HistogramType.values()) {
             Random r = new Random(42);
             testPreserveOnePercent(type, bucketCount);
-            if (type == HistogramType.EXACT_12) {
+            if (type == HistogramType.EXACT_11) {
                 continue;
             }
             System.out.println("type: " + type);
@@ -39,8 +39,8 @@ public class TestHistogram {
                     }
                     int[] exactHisto = exact.getHistogram();
                     int[] approxHisto = est.getHistogram();
-                    System.out.println("exact histo: " + Arrays.toString(exactHisto));
-                    System.out.println("approx histo: " + Arrays.toString(approxHisto));
+                    // System.out.println("exact histo: " + Arrays.toString(exactHisto));
+                    // System.out.println("approx histo: " + Arrays.toString(approxHisto));
                     double sumSquareError = 0;
                     for (int i = 0; i < exactHisto.length; i++) {
                         int diff = exactHisto[i] - (i >= approxHisto.length ? 0 : approxHisto[i]);
@@ -65,7 +65,7 @@ public class TestHistogram {
             if (histo[bucketWithOnePerent] < 1) {
                 throw new AssertionError();
             }
-            if (histo[otherBucket] < 50) {
+            if (histo[otherBucket] < 30) {
                 throw new AssertionError();
             }
             for (int i = 0; i < bucketCount; i++) {
