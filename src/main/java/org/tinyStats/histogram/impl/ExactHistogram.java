@@ -1,18 +1,20 @@
 package org.tinyStats.histogram.impl;
 
-import org.tinyStats.histogram.LengthHistogram;
+import org.tinyStats.histogram.Histogram;
 
 /**
- * An exact length histogram.
+ * An exact histogram. It uses a 64-bit counter for each bucket.
  */
-public class ExactLengthHistogram implements LengthHistogram {
+public class ExactHistogram implements Histogram {
 
-    private long[] counts = new long[12];
+    private long[] counts;
+
+    public ExactHistogram(int bucketCount) {
+        counts = new long[12];
+    }
 
     @Override
-    public void add(long hash, long length) {
-        int logLength = Math.max(0, 63 - Long.numberOfLeadingZeros(length));
-        int bucket = Math.min(11, (logLength + 2) / 3);
+    public void add(long hash, int bucket) {
         counts[bucket]++;
     }
 
@@ -22,7 +24,7 @@ public class ExactLengthHistogram implements LengthHistogram {
         for (long x : counts) {
             sum += x;
         }
-        int[] result = new int[12];
+        int[] result = new int[counts.length];
         for (int i = 0; i < counts.length; i++) {
             long c = counts[i];
             if (c > 0) {

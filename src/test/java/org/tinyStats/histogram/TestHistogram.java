@@ -3,36 +3,36 @@ package org.tinyStats.histogram;
 import java.util.Arrays;
 import java.util.Random;
 
-import org.tinyStats.histogram.impl.ExactLengthHistogram;
+import org.tinyStats.histogram.impl.ExactHistogram;
 import org.tinyStats.util.Hash;
 
-public class TestLengthHistogram {
+public class TestHistogram {
 
     public static void main(String... args) {
-        test();
+        test(12);
     }
 
-    private static void test() {
-        int size = 1000000;
-        Random r = new Random(42);
-        for (LengthHistogramType type : LengthHistogramType.values()) {
-            testPreserveOnePercent(type);
-            if (type == LengthHistogramType.EXACT_LENGTH_HISTOGRAM) {
+    private static void test(int bucketCount) {
+        for (HistogramType type : HistogramType.values()) {
+            Random r = new Random(42);
+            testPreserveOnePercent(type, bucketCount);
+            if (type == HistogramType.EXACT_12) {
                 continue;
             }
             System.out.println("type: " + type);
             double totalSquareError = 0;
-            for(int test = 0; test < 10; test++) {
+            for (int test = 0; test < 100; test++) {
+                int size = r.nextInt(1000000);
                 for (int sort = 0; sort <= 2; sort++) {
-                    long[] data = randomLength(size, r);
+                    int[] data = randomBucketData(size, r, bucketCount);
                     if (sort > 0) {
                         Arrays.sort(data);
                         if (sort > 1) {
                             reverse(data);
                         }
                     }
-                    ExactLengthHistogram exact = new ExactLengthHistogram();
-                    LengthHistogram est = type.construct();
+                    ExactHistogram exact = new ExactHistogram(bucketCount);
+                    Histogram est = type.construct();
                     for (int i = 0; i < size; i++) {
                         est.add(Hash.hash64(i), data[i]);
                         exact.add(Hash.hash64(i), data[i]);
@@ -53,62 +53,57 @@ public class TestLengthHistogram {
         }
     }
 
-    private static void testPreserveOnePercent(LengthHistogramType type) {
-        for (long sizeWithOnePerent = 8, bucket = 1; sizeWithOnePerent <= 10_000_000_000L; sizeWithOnePerent *= 8, bucket++) {
-            LengthHistogram est = type.construct();
-            est.add(123, sizeWithOnePerent);
+    private static void testPreserveOnePercent(HistogramType type, int bucketCount) {
+        for (int bucketWithOnePerent = 0; bucketWithOnePerent < bucketCount; bucketWithOnePerent++) {
+            Histogram est = type.construct();
+            est.add(123, bucketWithOnePerent);
+            int otherBucket = bucketWithOnePerent == 0 ? 1 : 0;
             for (int i = 0; i < 1000000; i++) {
-                est.add(Hash.hash64(i), 1);
+                est.add(Hash.hash64(i), otherBucket);
             }
             int[] histo = est.getHistogram();
-            if (histo[(int) bucket] < 1) {
+            if (histo[bucketWithOnePerent] < 1) {
                 throw new AssertionError();
+            }
+            if (histo[otherBucket] < 50) {
+                throw new AssertionError();
+            }
+            for (int i = 0; i < bucketCount; i++) {
+                if (i != bucketWithOnePerent && i != otherBucket) {
+                    if (histo[i] != 0) {
+                        throw new AssertionError();
+                    }
+                }
             }
         }
     }
 
-    private static void reverse(long[] data) {
+    private static void reverse(int[] data) {
         for (int i = 0; i < data.length / 2; i++) {
-            long temp = data[i];
+            int temp = data[i];
             data[i] = data[data.length - 1 - i];
             data[data.length - 1 - i] = temp;
         }
     }
 
-    static int[] getCounts(long[] data) {
-        int[] counts = new int[10];
-        for (int i = 0; i < 10; i++) {
-            int count = 0;
-            for (long d : data) {
-                if (d == i) {
-                    count++;
-                }
-            }
-            counts[i] = count;
-        }
-        return counts;
-    }
-
-    static long[] randomLength(int size, Random r) {
+    static int[] randomBucketData(int size, Random r, int bucketCount) {
         int percentTotal = 100;
-        int[] percents = new int[12];
-        long[] data = new long[size];
+        int[] percents = new int[bucketCount];
+        int[] data = new int[size];
         int j = 0;
-        long len = 1;
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < bucketCount; i++) {
             if (i == 11) {
                 while (j < size) {
-                    data[j++] = len;
+                    data[j++] = i;
                 }
             } else {
                 int percent = r.nextInt(percentTotal);
                 percentTotal -= percent;
                 percents[i] = percent;
                 for (int k = size * percent / 100; j < size && k > 0; k--) {
-                    data[j++] = len;
+                    data[j++] = i;
                 }
             }
-            len *= 8;
         }
         return data;
     }

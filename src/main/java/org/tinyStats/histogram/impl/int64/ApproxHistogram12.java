@@ -1,10 +1,10 @@
 package org.tinyStats.histogram.impl.int64;
 
-import org.tinyStats.histogram.LengthHistogram;
+import org.tinyStats.histogram.Histogram;
 
 /**
- * A length histogram that uses 64 bits of state (12 buckets of 5 bits each,
- * plus 4 bits base counter).
+ * A histogram that uses 64 bits of state (12 buckets of 5 bits each,
+ * plus a 4 bits base counter).
  *
  * Linear approximate counting is used. The last roughly 33 - 400 billion
  * entries are counted only.
@@ -13,18 +13,16 @@ import org.tinyStats.histogram.LengthHistogram;
  * the count for the given bucket. If the maximum count for a bucket is reached,
  * the base counter is incremented, and values for all counters are divided by
  * 2. From then on, adding an entry for a bucket will only increment the counter
- * with a certain probability (1/4, 1/16,...) depending on the base counter.
+ * with a certain probability depending on the base counter (1/4, 1/16,...).
  *
  * Accuracy is usually within +/- 5, but sometimes +/- 15 for each bucket.
  */
-public class LinearApproxLengthHistogram implements LengthHistogram {
+public class ApproxHistogram12 implements Histogram {
 
     private long data;
 
     @Override
-    public void add(long hash, long length) {
-        int logLength = Math.max(0, 63 - Long.numberOfLeadingZeros(length));
-        int bucket = Math.min(11, (logLength + 2) / 3);
+    public void add(long hash, int bucket) {
         int base = (int) (data & 0xf);
         long d = (int) (data >>> (4 + bucket * 5)) & 0x1f;
         if (d == 0x1f) {
