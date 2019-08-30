@@ -2,6 +2,12 @@ package org.tinyStats.util;
 
 public class Hash {
 
+    private static long seed;
+
+    public static long randomLong() {
+        return hash64(seed++);
+    }
+
     public static long hash64(long x, long seed) {
         x += seed;
         x = (x ^ (x >>> 33)) * 0xff51afd7ed558ccdL;

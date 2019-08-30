@@ -8,13 +8,9 @@ public interface Histogram {
     /**
      * Add an entry.
      *
-     * @param hash a hash of the entry, or a random number if there is no entry. It
-     *             is assumed each entry is only added once, which means likely the
-     *             hash value will be different on each entry. Hash collisions are
-     *             fine, but they should not appear more frequently than expected.
      * @param bucket the bucket
      */
-    void add(long hash, int bucket);
+    void add(int bucket);
 
     /**
      * Get the histogram. An array is returned that contains the estimated

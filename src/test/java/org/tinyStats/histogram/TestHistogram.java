@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 import org.tinyStats.histogram.impl.ExactHistogram;
-import org.tinyStats.util.Hash;
 
 public class TestHistogram {
 
@@ -34,8 +33,8 @@ public class TestHistogram {
                     ExactHistogram exact = new ExactHistogram(bucketCount);
                     Histogram est = type.construct();
                     for (int i = 0; i < size; i++) {
-                        est.add(Hash.hash64(i), data[i]);
-                        exact.add(Hash.hash64(i), data[i]);
+                        est.add(data[i]);
+                        exact.add(data[i]);
                     }
                     int[] exactHisto = exact.getHistogram();
                     int[] approxHisto = est.getHistogram();
@@ -56,10 +55,10 @@ public class TestHistogram {
     private static void testPreserveOnePercent(HistogramType type, int bucketCount) {
         for (int bucketWithOnePerent = 0; bucketWithOnePerent < bucketCount; bucketWithOnePerent++) {
             Histogram est = type.construct();
-            est.add(123, bucketWithOnePerent);
+            est.add(bucketWithOnePerent);
             int otherBucket = bucketWithOnePerent == 0 ? 1 : 0;
             for (int i = 0; i < 1000000; i++) {
-                est.add(Hash.hash64(i), otherBucket);
+                est.add(otherBucket);
             }
             int[] histo = est.getHistogram();
             if (histo[bucketWithOnePerent] < 1) {

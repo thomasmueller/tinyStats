@@ -14,7 +14,7 @@ public class ExactHistogram implements Histogram {
     }
 
     @Override
-    public void add(long hash, int bucket) {
+    public void add( int bucket) {
         counts[bucket]++;
     }
 

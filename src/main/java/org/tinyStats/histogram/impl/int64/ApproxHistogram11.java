@@ -1,6 +1,7 @@
 package org.tinyStats.histogram.impl.int64;
 
 import org.tinyStats.histogram.Histogram;
+import org.tinyStats.util.Hash;
 
 /**
  * A histogram that uses 64 bits of state (11 buckets of 5 bits each,
@@ -21,7 +22,7 @@ public class ApproxHistogram11 implements Histogram {
     private long data;
 
     @Override
-    public void add(long hash, int bucket) {
+    public void add(int bucket) {
         int base = (int) (data & 0xff);
         long d = (int) (data >>> (8 + bucket * 5)) & 0x1f;
         if (d == 0x1f) {
@@ -38,7 +39,8 @@ public class ApproxHistogram11 implements Histogram {
             data += 1L << (8 + bucket * 5);
             return;
         }
-        int zeros = Long.numberOfLeadingZeros(hash);
+        long random = Hash.randomLong();
+        int zeros = Long.numberOfLeadingZeros(random);
         if (zeros >= base) {
             data += 1L << (8 + bucket * 5);
         }
