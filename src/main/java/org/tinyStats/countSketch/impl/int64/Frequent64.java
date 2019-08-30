@@ -7,9 +7,10 @@ import org.tinyStats.countSketch.CountSketch;
 /**
  * The "frequent" algorithm, which is similar to the "majority" algorithm, but
  * supports more than 1 entry.
- * 
- * For each frequent entry, 64 bits are needed.
- * 
+ *
+ * For each frequent entry, 64 bits are needed (32 bit for the counter, 32 bit
+ * for the hash).
+ *
  * The estimate is 1 for the most frequent element, 2 for the second,... and 0
  * otherwise.
  */
@@ -53,7 +54,7 @@ public class Frequent64 implements CountSketch {
         }
         return 0;
     }
-    
+
     @Override
     public long estimateRepeatRate() {
         return 0;

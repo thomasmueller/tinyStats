@@ -18,9 +18,11 @@ public class TestCountSketch {
         Random r = new Random(42);
         for (CountSketchType type : CountSketchType.values()) {
             System.out.println("type: " + type);
+//            for (double skew = 256; skew < 2000; skew *= 2) {
             for (double skew = 2; skew < 2000; skew *= 2) {
                 for (int repeat = 1; repeat <= 2; repeat++) {
-                    for (int sort = 0; sort <= 2; sort++) {
+                    for (int sort = 0; sort <= 0; sort++) {
+//                     for (int sort = 0; sort <= 2; sort++) {
                         long[] data = randomData(size, skew, r, repeat);
                         long x = r.nextLong();
                         if (sort > 0) {
@@ -38,17 +40,17 @@ public class TestCountSketch {
                                 + counts[0] + " " + est.toString());
                         for (int i = 0; i < 3; i++) {
                             long e2 = est.estimate(Hash.hash64(x + i));
-                            if (e2 == 0 && (100. * counts[i] / size) > 50) {
-                                // error reporting
-                                System.out.println("??" + Long.toHexString(x));
-                                CountSketch est2 = type.construct();
-                                for (int j = 0; j < size; j++) {
-                                    est2.add(Hash.hash64(x + data[j]));
-                                }
-                                int[] counts2 = getCounts(data);
-                                long e3 = est.estimate(Hash.hash64(x + i));
-                                System.out.println("e3 " + e3);
-                            }
+//                            if (e2 == 0 && (100. * counts[i] / size) > 50) {
+//                                // error reporting
+//                                System.out.println("??" + Long.toHexString(x));
+//                                CountSketch est2 = type.construct();
+//                                for (int j = 0; j < size; j++) {
+//                                    est2.add(Hash.hash64(x + data[j]));
+//                                }
+//                                int[] counts2 = getCounts(data);
+//                                long e3 = est.estimate(Hash.hash64(x + i));
+//                                System.out.println("e3 " + e3);
+//                            }
                             System.out.println("  " + i + " est " + e2 + " got " + counts[i] + " "
                                     + (100. * counts[i] / size) + "% repeatRate " + est.estimateRepeatRate());
                         }
