@@ -4,6 +4,10 @@ public class Hash {
 
     private static long seed;
 
+    public static void setSeed(long s) {
+        seed = s;
+    }
+
     public static long randomLong() {
         return hash64(seed++);
     }
