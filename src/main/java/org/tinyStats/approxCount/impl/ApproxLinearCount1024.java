@@ -6,6 +6,9 @@ import org.tinyStats.approxCount.ApproxCount;
  * An approximate counter. Resolution is 1024. When adding and then removing the
  * same entries, the count goes back to 0.
  *
+ * See also the paper "Approximate Counting: A detailed analysis" by P.
+ * Flajolet.
+ *
  * Relative accuracy is relatively bad if there are few entries, and gets better
  * with more entries.
  */

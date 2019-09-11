@@ -1,14 +1,17 @@
 package org.tinyStats.sample;
 
+import org.junit.Test;
 import org.tinyStats.sample.impl.ReservoirSampling;
 import org.tinyStats.util.Hash;
 
 public class SampleTest {
+
     public static void main(String... args) {
-        test();
+        new SampleTest().test();
     }
 
-    private static void test() {
+    @Test
+    public void test() {
         Hash.setSeed(42);
         int testCount = 10000;
         int size = 1000;
@@ -25,8 +28,8 @@ public class SampleTest {
         }
         int expected = testCount * sampleSize / size;
         for (int c : counts) {
-            if (c <= expected * .7 || c >= expected * 1.5) {
-                throw new AssertionError("expected " + expected + " got " + c);
+            if (c <= expected * .6 || c >= expected * 1.5) {
+                throw new AssertionError("expected near " + expected + " got " + c);
             }
         }
     }

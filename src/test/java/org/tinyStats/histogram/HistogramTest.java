@@ -5,7 +5,7 @@ import java.util.Random;
 
 import org.tinyStats.histogram.impl.ExactHistogram;
 
-public class TestHistogram {
+public class HistogramTest {
 
     public static void main(String... args) {
         test(11);

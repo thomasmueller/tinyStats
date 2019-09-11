@@ -3,7 +3,7 @@ package org.tinyStats.approxCount.impl;
 import org.tinyStats.approxCount.ApproxCount;
 
 /**
- * An exact counter.
+ * An exact counter, using 64 bits of state.
  */
 public class ExactCount implements ApproxCount {
 
@@ -13,7 +13,7 @@ public class ExactCount implements ApproxCount {
     public void add(long hash) {
         count++;
     }
-    
+
     @Override
     public void remove(long hash) {
         count--;
@@ -23,5 +23,5 @@ public class ExactCount implements ApproxCount {
     public long estimate() {
         return count;
     }
-    
+
 }

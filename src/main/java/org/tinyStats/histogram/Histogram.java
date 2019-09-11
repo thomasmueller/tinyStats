@@ -2,6 +2,8 @@ package org.tinyStats.histogram;
 
 /**
  * A histogram. It can estimate the percentages of entries in buckets.
+ *
+ * The number of buckets depends on the implementation.
  */
 public interface Histogram {
 

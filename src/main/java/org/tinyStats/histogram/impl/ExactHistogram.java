@@ -10,7 +10,7 @@ public class ExactHistogram implements Histogram {
     private long[] counts;
 
     public ExactHistogram(int bucketCount) {
-        counts = new long[12];
+        counts = new long[bucketCount];
     }
 
     @Override

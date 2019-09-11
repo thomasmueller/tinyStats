@@ -6,6 +6,9 @@ import org.tinyStats.approxCount.ApproxCount;
  * An order-of-magnitude count approximation. It uses a state of 4 bits, and can
  * count up to 4^16 (4'294'967'296).
  *
+ * See also the paper "Approximate Counting: A detailed analysis" by P.
+ * Flajolet.
+ *
  * The estimation is often more than 10 times to small or too large.
  */
 public class ApproxCount4 implements ApproxCount {

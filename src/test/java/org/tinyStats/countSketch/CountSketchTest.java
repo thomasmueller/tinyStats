@@ -18,11 +18,9 @@ public class CountSketchTest {
         Random r = new Random(42);
         for (CountSketchType type : CountSketchType.values()) {
             System.out.println("type: " + type);
-//            for (double skew = 256; skew < 2000; skew *= 2) {
             for (double skew = 2; skew < 2000; skew *= 2) {
                 for (int repeat = 1; repeat <= 2; repeat++) {
                     for (int sort = 0; sort <= 0; sort++) {
-//                     for (int sort = 0; sort <= 2; sort++) {
                         long[] data = randomData(size, skew, r, repeat);
                         long x = r.nextLong();
                         if (sort > 0) {

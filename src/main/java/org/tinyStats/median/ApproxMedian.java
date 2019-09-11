@@ -10,8 +10,18 @@ package org.tinyStats.median;
  */
 public interface ApproxMedian<T> {
 
+    /**
+     * Add an entry.
+     *
+     * @param obj the object
+     */
     void add(T obj);
 
+    /**
+     * Get the approximate median.
+     *
+     * @return the approximate median
+     */
     T getApproxMedian();
 
 }

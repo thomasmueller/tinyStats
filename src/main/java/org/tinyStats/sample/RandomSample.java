@@ -15,8 +15,8 @@ public interface RandomSample<T> {
     void add(T obj);
 
     /**
-     * Get a random sample. The list is unordered and possibly is zero. It may
-     * contain the same object multiple times.
+     * Get a random sample. The list is unordered and possibly empty. It may contain
+     * the same object multiple times.
      *
      * @return the list
      */
