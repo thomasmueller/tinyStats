@@ -12,7 +12,7 @@ import org.tinyStats.cardinality.impl.int64.HyperLogLog5Bit64;
 import org.tinyStats.cardinality.impl.int64.HyperLogLog4TailCut64;
 import org.tinyStats.cardinality.impl.int64.LinearCounting64;
 
-public enum EstimatorType {
+public enum CardinalityEstimatorType {
     HYPER_BIT_BIT {
         @Override
         public CardinalityEstimator construct() {

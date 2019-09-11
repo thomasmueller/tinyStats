@@ -6,7 +6,7 @@ import java.util.Random;
 import org.tinyStats.countSketch.CountSketch;
 import org.tinyStats.util.Hash;
 
-public class TestCountSketch {
+public class CountSketchTest {
 
     public static void main(String... args) {
         test();

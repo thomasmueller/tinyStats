@@ -7,7 +7,7 @@ import java.util.Random;
 import org.junit.Test;
 import org.tinyStats.histogram.impl.HistogramUtils;
 
-public class TestHistogramUtils {
+public class HistogramUtilsTest {
     @Test
     public void lengthToBucket() {
         int bucketCount = 11;

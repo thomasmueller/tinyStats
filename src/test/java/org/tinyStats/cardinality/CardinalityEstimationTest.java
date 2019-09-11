@@ -2,7 +2,7 @@ package org.tinyStats.cardinality;
 
 import org.tinyStats.util.Hash;
 
-public class TestEstimation {
+public class CardinalityEstimationTest {
     
     public static void main(String... args) {
         test();
@@ -11,7 +11,7 @@ public class TestEstimation {
     
     private static void test() {
         if (!FIND_FACTOR) {
-            for (EstimatorType type : EstimatorType.values()) {
+            for (CardinalityEstimatorType type : CardinalityEstimatorType.values()) {
                 double sum = 0;
                 for (long size = 1; size <= 20; size++) {
                     sum += test(type, size);
@@ -28,7 +28,7 @@ public class TestEstimation {
         }
         
         if (FIND_FACTOR) {
-            for (EstimatorType type : EstimatorType.values()) {
+            for (CardinalityEstimatorType type : CardinalityEstimatorType.values()) {
                 double bestFactor = FACTOR;
                 for (double step = 1; step >= 0.0001; step /= 2) {
                     STEP = step;
@@ -72,7 +72,7 @@ public class TestEstimation {
 
     
 
-    private static double test(EstimatorType type, long size) {
+    private static double test(CardinalityEstimatorType type, long size) {
         long x = 0;
         long min = Long.MAX_VALUE, max = Long.MIN_VALUE;
         int testCount = 1000;

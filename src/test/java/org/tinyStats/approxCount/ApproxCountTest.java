@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.tinyStats.util.Hash;
 
-public class TestApproxCount {
+public class ApproxCountTest {
 
     public static void main(String... args) {
         test();
