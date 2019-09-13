@@ -1,28 +1,31 @@
 package org.tinyStats.cardinality;
 
+import org.junit.Test;
 import org.tinyStats.util.Hash;
 
 public class CardinalityEstimationTest {
 
-    public static void main(String... args) {
-        test();
-    }
+    static final boolean FIND_FACTOR = false;
+    public static double FACTOR = 4;
+    public static double STEP;
 
-    private static void test() {
+    public static void main(String... args) {
+        boolean debug = true;
+        int testCount = 1000;
         if (!FIND_FACTOR) {
             for (CardinalityEstimatorType type : CardinalityEstimatorType.values()) {
                 double sum = 0;
                 for (long size = 1; size <= 20; size++) {
-                    sum += test(type, size);
+                    sum += test(type, size, testCount, debug);
                 }
                 for (long size = 22; size <= 300; size += size / 5) {
-                    sum += test(type, size);
+                    sum += test(type, size, testCount, debug);
                 }
                 for (long size = 400; size <= Integer.MAX_VALUE; size *= 2) {
-                    sum += test(type, size);
+                    sum += test(type, size, testCount, debug);
                     // if (size > 3000) break;
                 }
-                System.out.println("sum: " + sum);
+                System.out.println(type + " sum: " + sum);
             }
         }
 
@@ -38,13 +41,13 @@ public class CardinalityEstimationTest {
                         FACTOR = testFactor + i * step;
                         System.out.println("   test " + FACTOR);
                         for (long size = 1; size <= 20; size++) {
-                            sum += test(type, size);
+                            sum += test(type, size, testCount, false);
                         }
                         for (long size = 22; size <= 300; size += size / 5) {
-                            sum += test(type, size);
+                            sum += test(type, size, testCount, false);
                         }
                         for (long size = 400; size <= Integer.MAX_VALUE; size *= 2) {
-                            sum += test(type, size);
+                            sum += test(type, size, testCount, false);
                             if (size > 10000) break;
                         }
                         if (sum < best) {
@@ -56,17 +59,16 @@ public class CardinalityEstimationTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void test() {
 
     }
 
-    static final boolean FIND_FACTOR = false;
-    public static double FACTOR = 4;
-    public static double STEP;
-
-    private static double test(CardinalityEstimatorType type, long size) {
+    private static double test(CardinalityEstimatorType type, long size, int testCount, boolean debug) {
         long x = 0;
         long min = Long.MAX_VALUE, max = Long.MIN_VALUE;
-        int testCount = 1000;
 
         if (size >= 333000) {
             if (true) {
@@ -114,7 +116,7 @@ public class CardinalityEstimationTest {
         double relStdDevP = stdDev / size * 100;
         int biasFirstP = (int) (100 * (sumFirst / testCount / size) - 100);
         int biasP = (int) (100 * (sum / testCount / runs / size) - 100);
-        if (!FIND_FACTOR) {
+        if (debug) {
             System.out.println("size " + size + " relStdDev% " + (int) relStdDevP +
                     " range " + min + ".." + max +
                     " testCount " + testCount +
