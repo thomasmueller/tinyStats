@@ -19,6 +19,7 @@ public interface CountSketch {
      * was added). This method might be a bit slow (use floating point operations
      * and loops).
      *
+     * @param hash the hash of the key
      * @return 0 if the entry is likely not frequent, otherwise some number > 0,
      *         where the exact meaning depends on the algorithm
      */
