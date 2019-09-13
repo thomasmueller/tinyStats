@@ -16,7 +16,7 @@ public class HistogramUtilsTest {
         }
         long min = 2, next = 16, step = 1;
         for (int bucket = 1; bucket < bucketCount; bucket++) {
-            System.out.println(min + ".." + (next - 1) + " -> " + bucket);
+            // System.out.println(min + ".." + (next - 1) + " -> " + bucket);
             for (long x = min; x < next; x += step) {
                 assertEquals("x=" + x, bucket, HistogramUtils.lengthTo11Buckets(x));
             }

@@ -1,5 +1,7 @@
 package org.tinyStats.cardinality;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.tinyStats.util.Hash;
 
@@ -10,22 +12,12 @@ public class CardinalityEstimationTest {
     public static double STEP;
 
     public static void main(String... args) {
-        boolean debug = true;
         int testCount = 1000;
+        double exponent = 5;
         if (!FIND_FACTOR) {
             for (CardinalityEstimatorType type : CardinalityEstimatorType.values()) {
-                double sum = 0;
-                for (long size = 1; size <= 20; size++) {
-                    sum += test(type, size, testCount, debug);
-                }
-                for (long size = 22; size <= 300; size += size / 5) {
-                    sum += test(type, size, testCount, debug);
-                }
-                for (long size = 400; size <= Integer.MAX_VALUE; size *= 2) {
-                    sum += test(type, size, testCount, debug);
-                    // if (size > 3000) break;
-                }
-                System.out.println(type + " sum: " + sum);
+                double sum = averageOverRange(type, 333_000, testCount, true, exponent);
+                System.out.println(type + " avg: " + sum);
             }
         }
 
@@ -37,19 +29,9 @@ public class CardinalityEstimationTest {
                     double testFactor = bestFactor;
                     double best = Double.POSITIVE_INFINITY;
                     for (int i = -3; i <= 3; i++) {
-                        double sum = 0;
                         FACTOR = testFactor + i * step;
                         System.out.println("   test " + FACTOR);
-                        for (long size = 1; size <= 20; size++) {
-                            sum += test(type, size, testCount, false);
-                        }
-                        for (long size = 22; size <= 300; size += size / 5) {
-                            sum += test(type, size, testCount, false);
-                        }
-                        for (long size = 400; size <= Integer.MAX_VALUE; size *= 2) {
-                            sum += test(type, size, testCount, false);
-                            if (size > 10000) break;
-                        }
+                        double sum = averageOverRange(type, 10_000, testCount, false, exponent);
                         if (sum < best) {
                             System.out.println("### factor: " + FACTOR + " i " + i + " sum " + sum + " step " + STEP);
                             best = sum;
@@ -63,19 +45,82 @@ public class CardinalityEstimationTest {
 
     @Test
     public void test() {
-
+        int testCount = 50;
+        for (CardinalityEstimatorType type : CardinalityEstimatorType.values()) {
+            double avg = Math.sqrt(averageOverRange(type, 50_000, testCount, false, 2));
+            // System.out.println(type + " avg " + avg);
+            double min, max;
+            switch(type) {
+            case HYPER_LOG_LOG:
+                min = 20;
+                max = 30;
+                break;
+            case HYPER_BIT_BIT:
+                min = 10_000;
+                max = 30_000;
+                break;
+            case HYPER_BIT_BIT_64:
+                min = 500;
+                max = 700;
+                break;
+            case HYPER_LOG_LOG_5_BIT_64:
+                min = 40;
+                max = 50;
+                break;
+            case LINEAR_COUNTING_64:
+                min = 30;
+                max = 40;
+                break;
+            case HYPER_LOG_LOG_2_TAILCUT_64:
+                min = 19;
+                max = 20;
+                break;
+            case HYPER_LOG_LOG_3_TAILCUT_64:
+                min = 22;
+                max = 23;
+                break;
+            case HYPER_LOG_LOG_4_TAILCUT_64:
+                min = 24;
+                max = 25;
+                break;
+            case HYPER_LOG_LOG_2_LINEAR_64:
+                min = 16;
+                max = 17;
+                break;
+            case HYPER_LOG_LOG_3_LINEAR_64:
+                min = 16;
+                max = 17;
+                break;
+            default:
+                min = 0;
+                max = 0;
+                break;
+            }
+            assertTrue(type + " expected " + min + ".." + max + " got " + avg, min < avg && avg < max);
+        }
     }
 
-    private static double test(CardinalityEstimatorType type, long size, int testCount, boolean debug) {
+    private static double averageOverRange(CardinalityEstimatorType type, long maxSize, int testCount, boolean debug, double exponent) {
+        double sum = 0;
+        int count = 0;
+        for (long size = 1; size <= 20; size++) {
+            sum += test(type, size, testCount, false, exponent);
+            count++;
+        }
+        for (long size = 22; size <= 300; size += size / 5) {
+            sum += test(type, size, testCount, false, exponent);
+            count++;
+        }
+        for (long size = 400; size <= maxSize; size *= 2) {
+            sum += test(type, size, testCount, false, exponent);
+            count++;
+        }
+        return sum / count;
+    }
+
+    private static double test(CardinalityEstimatorType type, long size, int testCount, boolean debug, double exponent) {
         long x = 0;
         long min = Long.MAX_VALUE, max = Long.MIN_VALUE;
-
-        if (size >= 333000) {
-            if (true) {
-                return 0;
-            }
-            // testCount = 1;
-        }
         long ns = System.nanoTime();
         double sumSquareError = 0;
         double sum = 0;
@@ -128,7 +173,7 @@ public class CardinalityEstimationTest {
         // we try to reduce the relStdDevP, make sure there are no large values
         // (trying to reduce sumSquareError directly
         // would mean we care more about larger sets, but we don't)
-        return relStdDevP * relStdDevP * relStdDevP * relStdDevP * relStdDevP;
+        return Math.pow(relStdDevP, exponent);
     }
 
 }
