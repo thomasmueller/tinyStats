@@ -18,6 +18,7 @@ import org.tinyStats.util.Hash;
 public class AMSSketch implements CountSketch {
 
     private final int depth, buckets;
+    private long totalCount;
     private final int[][] counts;
 
     public AMSSketch(int depth, int buckets) {
@@ -43,6 +44,7 @@ public class AMSSketch implements CountSketch {
 
     @Override
     public void add(long hash) {
+        totalCount++;
         for (int i = 0; i < buckets; i++) {
             long d = Hash.hash64(hash, i);
             int x = (d & 1) == 0 ? -1 : 1;
@@ -59,7 +61,7 @@ public class AMSSketch implements CountSketch {
             est[i] = x * counts[i][(int) (d >>> 1) & (depth - 1)];
         }
         Arrays.sort(est);
-        return est[buckets / 2];
+        return est[buckets / 2] * 100 / totalCount;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class AMSSketch implements CountSketch {
             est[i] = sum;
         }
         Arrays.sort(est);
-        return est[buckets / 2];
+        return (int) Math.sqrt(est[buckets / 2]) * 100 / totalCount;
     }
 
 }
