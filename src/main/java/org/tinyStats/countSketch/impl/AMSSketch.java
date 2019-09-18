@@ -25,9 +25,6 @@ public class AMSSketch implements CountSketch {
         if (Integer.bitCount(depth) != 1) {
             throw new IllegalArgumentException("Depth must be a power of 2");
         }
-        if (Integer.bitCount(buckets) != 1) {
-            throw new IllegalArgumentException("Buckets must be a power of 2");
-        }
         this.depth = depth;
         this.buckets = buckets;
         counts = new int[buckets][depth];
@@ -69,7 +66,7 @@ public class AMSSketch implements CountSketch {
         long[] est = new long[buckets];
         for (int i = 0; i < buckets; i++) {
             long sum = 0;
-            for (int j = 0; j < buckets; j++) {
+            for (int j = 0; j < depth; j++) {
                 long c = counts[i][j];
                 sum += c * c;
             }

@@ -16,6 +16,7 @@ public class CountSketchTest {
         for (CountSketchType type : CountSketchType.values()) {
             System.out.println("type: " + type);
             test(type, size, true);
+    if(true)return;
         }
     }
 
@@ -24,11 +25,11 @@ public class CountSketchTest {
         int size = 100_000;
         CountSketchError result;
 
-//        result = test(CountSketchType.COUNT_MIN_SKETCH, size, false);
-//        assertTrue(result.stdDevRepeatRate < 2);
-//        assertTrue(result.stdDevEntryEstimation < 2);
+        result = test(CountSketchType.COUNT_MIN_SKETCH_4_16, size, false);
+        assertTrue(result.stdDevRepeatRate < 2);
+        assertTrue(result.stdDevEntryEstimation < 2);
 
-        result = test(CountSketchType.AMS_SKETCH, size, false);
+        result = test(CountSketchType.AMS_SKETCH_8_8, size, false);
         assertTrue(result.stdDevRepeatRate < 2);
         assertTrue(result.stdDevEntryEstimation < 2);
 
