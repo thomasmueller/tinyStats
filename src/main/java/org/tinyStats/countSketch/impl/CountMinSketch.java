@@ -39,11 +39,6 @@ public class CountMinSketch implements CountSketch {
     }
 
     @Override
-    public String toString() {
-        return Arrays.toString(data);
-    }
-
-    @Override
     public long estimate(long hash) {
         long minAll = Long.MAX_VALUE;
         for (int i = 0; i < k; i++) {

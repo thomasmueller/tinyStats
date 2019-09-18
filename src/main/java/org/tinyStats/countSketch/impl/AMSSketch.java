@@ -31,15 +31,6 @@ public class AMSSketch implements CountSketch {
     }
 
     @Override
-    public String toString() {
-        StringBuilder buff = new StringBuilder();
-        for (int i = 0; i < counts.length; i++) {
-            buff.append(" ").append(Arrays.toString(counts[i]));
-        }
-        return buff.toString();
-    }
-
-    @Override
     public void add(long hash) {
         totalCount++;
         for (int i = 0; i < buckets; i++) {

@@ -7,15 +7,15 @@ import org.tinyStats.countSketch.CountSketch;
  * all other elements combined), then this simple algorithm is able to identify
  * it. Otherwise, it will identify some random element. Does not detect where
  * the _is_ a majority element.
- * 
- * The estimate is 1 for the identified element, and 0 otherwise. 
+ *
+ * The estimate is 99 for the identified element, and 0 otherwise.
  */
 public class Majority64 implements CountSketch {
 
     // upper 32 bits: count
     // lower 32 bits: hash
     private long state;
-    
+
     @Override
     public void add(long hash) {
         if (state >>> 32 == 0) {
@@ -29,13 +29,13 @@ public class Majority64 implements CountSketch {
 
     @Override
     public long estimate(long hash) {
-        return (int) state == (int) hash ? 1 : 0;
+        return (int) state == (int) hash ? 99 : 0;
     }
-    
+
     @Override
     public long estimateRepeatRate() {
         return 0;
     }
-    
+
 
 }

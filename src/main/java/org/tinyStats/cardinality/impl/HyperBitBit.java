@@ -35,8 +35,4 @@ public class HyperBitBit implements CardinalityEstimator {
         return (long) (Math.pow(2, lgN + 5.15 + Long.bitCount(sketch) / 32.0));
     }
 
-    public String toString() {
-        return lgN + " " + sketch + " " + sketch2;
-    }
-
 }

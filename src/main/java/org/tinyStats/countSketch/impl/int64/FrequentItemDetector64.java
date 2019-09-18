@@ -14,7 +14,8 @@ import org.tinyStats.util.Hash;
  * than 50% of the time, but in rare cases (1 / 196) two entries that just
  * happen to be mapped to the same bucket.
  *
- * It can't be used to detect which entries are the most frequent one.
+ * It can't be used to detect which entries are the most frequent one. For this,
+ * it would have to be combined with the "frequent" or "majority" algorithm.
  */
 public class FrequentItemDetector64 implements CountSketch {
 

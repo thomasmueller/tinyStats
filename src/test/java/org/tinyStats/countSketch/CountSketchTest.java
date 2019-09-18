@@ -16,7 +16,6 @@ public class CountSketchTest {
         for (CountSketchType type : CountSketchType.values()) {
             System.out.println("type: " + type);
             test(type, size, true);
-    if(true)return;
         }
     }
 
@@ -24,6 +23,12 @@ public class CountSketchTest {
     public void test() {
         int size = 100_000;
         CountSketchError result;
+
+        result = test(CountSketchType.MAJORITY_64, size, false);
+        assertTrue(result.stdDevEntryEstimation < 15);
+
+        result = test(CountSketchType.FREQUENT_2_64, size, false);
+        assertTrue(result.stdDevEntryEstimation < 20);
 
         result = test(CountSketchType.COUNT_MIN_SKETCH_4_16, size, false);
         assertTrue(result.stdDevRepeatRate < 2);

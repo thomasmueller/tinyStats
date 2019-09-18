@@ -11,16 +11,15 @@ import org.tinyStats.countSketch.CountSketch;
  * For each frequent entry, 64 bits are needed (32 bit for the counter, 32 bit
  * for the hash).
  *
- * The estimate is 1 for the most frequent element, 2 for the second,... and 0
- * otherwise.
+ * The estimate is 99 for the most frequent element, 98 for the second,... and 0
  */
-public class Frequent64 implements CountSketch {
+public class FrequentK64 implements CountSketch {
 
     // upper 32 bits: count
     // lower 32 bits: hash
     private long[] state;
 
-    public Frequent64(int count) {
+    public FrequentK64(int count) {
         state = new long[count];
     }
 
@@ -49,7 +48,7 @@ public class Frequent64 implements CountSketch {
         Arrays.sort(s);
         for (int i = 0; i < s.length; i++) {
             if ((int) s[i] == (int) hash) {
-                return i + 1;
+                return i - state.length + 100;
             }
         }
         return 0;
