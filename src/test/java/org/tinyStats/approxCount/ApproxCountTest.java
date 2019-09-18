@@ -1,5 +1,6 @@
 package org.tinyStats.approxCount;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -26,6 +27,27 @@ public class ApproxCountTest {
         assertTrue(test(ApproxCountType.APPROX_LINEAR_1024, 1 << 15, false) <= 2000.0);
     }
 
+    @Test
+    public void testAddRemove() {
+        int maxSize = 1_000_000;
+        testAddRemove(ApproxCountType.EXACT, maxSize);
+        testAddRemove(ApproxCountType.APPROX_LINEAR_1024, maxSize);
+    }
+
+    static void testAddRemove(ApproxCountType type, int maxSize) {
+        ApproxCount est = type.construct();
+        assertTrue(est.supportsRemove());
+        for (int i = 0; i < 1_000_000; i++) {
+            est.add(Hash.hash64(i, 42));
+        }
+        long e = est.estimate();
+        assertTrue(e > 900_000);
+        for (int i = 0; i < 1_000_000; i++) {
+            est.remove(Hash.hash64(i, 42));
+        }
+        assertEquals(0L, est.estimate());
+    }
+
     static double test(ApproxCountType type, int maxSize, boolean debug) {
         int runs = 1000;
         int[] sizes = new int[100];
@@ -37,6 +59,7 @@ public class ApproxCountTest {
         long[] max = new long[100];
         for (int repeat = 0; repeat < runs; repeat++) {
             ApproxCount est = type.construct();
+            assertEquals(0, est.estimate());
             int next = 1;
             for (int i = 0, j = 0; i <= maxSize; i++) {
                 if (i == 10000) {
@@ -59,7 +82,7 @@ public class ApproxCountTest {
         }
         double sumSquareP = 0;
         int j = 0;
-        for(;; j++) {
+        for (;; j++) {
             int size = sizes[j];
             if (size == 0) {
                 break;
@@ -68,8 +91,8 @@ public class ApproxCountTest {
             double stdDev = Math.sqrt(sumSquareError / runs);
             double relStdDevP = stdDev / size * 100;
             if (debug) {
-                System.out.println("type " + type + " count " + size + " stdDevP " + relStdDevP +
-                        " avg "+ sums[j] / runs + " range " + min[j] + ".." + max[j]);
+                System.out.println("type " + type + " count " + size + " stdDevP " + relStdDevP + " avg "
+                        + sums[j] / runs + " range " + min[j] + ".." + max[j]);
             }
             sumSquareP += relStdDevP * relStdDevP;
             // System.out.println("histo10000 " + Arrays.toString(histo));

@@ -40,11 +40,6 @@ public class RemedianPlus<T> implements ApproxMedian<T> {
     }
 
     @Override
-    public String toString() {
-        return lists.toString();
-    }
-
-    @Override
     public void add(T obj) {
         for (int index = 0;; index++) {
             if (lists.size() <= index) {

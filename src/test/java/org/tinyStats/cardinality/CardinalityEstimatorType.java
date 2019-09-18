@@ -13,10 +13,28 @@ import org.tinyStats.cardinality.impl.int64.HyperLogLog4TailCut64;
 import org.tinyStats.cardinality.impl.int64.LinearCounting64;
 
 public enum CardinalityEstimatorType {
-    HYPER_LOG_LOG {
+    HYPER_LOG_LOG_M_16 {
         @Override
         public CardinalityEstimator construct() {
-            return new HyperLogLog(1024);
+            return new HyperLogLog(16);
+        }
+    },
+    HYPER_LOG_LOG_M_32 {
+        @Override
+        public CardinalityEstimator construct() {
+            return new HyperLogLog(32);
+        }
+    },
+    HYPER_LOG_LOG_M_64 {
+        @Override
+        public CardinalityEstimator construct() {
+            return new HyperLogLog(64);
+        }
+    },
+    HYPER_LOG_LOG_M_128 {
+        @Override
+        public CardinalityEstimator construct() {
+            return new HyperLogLog(128);
         }
     },
     HYPER_BIT_BIT {

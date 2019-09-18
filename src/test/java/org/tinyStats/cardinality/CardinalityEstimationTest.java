@@ -3,6 +3,7 @@ package org.tinyStats.cardinality;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.tinyStats.cardinality.impl.HyperLogLog;
 import org.tinyStats.util.Hash;
 
 public class CardinalityEstimationTest {
@@ -43,17 +44,39 @@ public class CardinalityEstimationTest {
         }
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalHyperLogLogTooSmall() {
+        new HyperLogLog(8);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalHyperLogLogNotPowerOfTwo() {
+        new HyperLogLog(30);
+    }
+
     @Test
     public void test() {
         int testCount = 50;
         for (CardinalityEstimatorType type : CardinalityEstimatorType.values()) {
-            double avg = Math.sqrt(averageOverRange(type, 50_000, testCount, false, 2));
+            double avg = Math.sqrt(averageOverRange(type, 30_000, testCount, false, 2));
             // System.out.println(type + " avg " + avg);
             double min, max;
             switch(type) {
-            case HYPER_LOG_LOG:
-                min = 20;
-                max = 30;
+            case HYPER_LOG_LOG_M_16:
+                min = 36;
+                max = 37;
+                break;
+            case HYPER_LOG_LOG_M_32:
+                min = 31;
+                max = 32;
+                break;
+            case HYPER_LOG_LOG_M_64:
+                min = 28;
+                max = 29;
+                break;
+            case HYPER_LOG_LOG_M_128:
+                min = 27;
+                max = 28;
                 break;
             case HYPER_BIT_BIT:
                 min = 10_000;
@@ -96,6 +119,7 @@ public class CardinalityEstimationTest {
                 max = 0;
                 break;
             }
+            // System.out.println(type + " expected " + min + ".." + max + " got " + avg);
             assertTrue(type + " expected " + min + ".." + max + " got " + avg, min < avg && avg < max);
         }
     }

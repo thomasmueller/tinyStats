@@ -27,6 +27,11 @@ public class ApproxLinearCount1024 implements ApproxCount {
     }
 
     @Override
+    public boolean supportsRemove() {
+        return true;
+    }
+
+    @Override
     public void remove(long hash) {
         if ((hash & MASK) == 0) {
             count--;

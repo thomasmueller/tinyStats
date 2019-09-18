@@ -25,6 +25,9 @@ public class ApproxCount4 implements ApproxCount {
 
     @Override
     public long estimate() {
+        if (data == 0) {
+            return 0;
+        }
         long result = 1L << (2 * data);
         result += result >>> 2;
         return result;

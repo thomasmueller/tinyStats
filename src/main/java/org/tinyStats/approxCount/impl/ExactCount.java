@@ -15,6 +15,11 @@ public class ExactCount implements ApproxCount {
     }
 
     @Override
+    public boolean supportsRemove() {
+        return true;
+    }
+
+    @Override
     public void remove(long hash) {
         count--;
     }

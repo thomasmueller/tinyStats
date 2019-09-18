@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.tinyStats.median.impl.RemedianPlus;
+import org.tinyStats.median.impl.RemedianSimple;
 import org.tinyStats.util.Hash;
 
 public class MedianTest {
@@ -19,6 +21,16 @@ public class MedianTest {
                 System.out.println(b + " " + error);
             }
         }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalRemedianSimpleEvenSize() {
+        new RemedianSimple<Integer>(8, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalRemedianPlusEvenSize() {
+        new RemedianPlus<Integer>(8, null);
     }
 
     @Test
