@@ -7,6 +7,8 @@ import java.util.Random;
 
 import org.junit.Test;
 import org.tinyStats.countSketch.CountSketch;
+import org.tinyStats.countSketch.impl.AMSSketch;
+import org.tinyStats.countSketch.impl.CountMinSketch;
 import org.tinyStats.util.Hash;
 
 public class CountSketchTest {
@@ -17,6 +19,16 @@ public class CountSketchTest {
             System.out.println("type: " + type);
             test(type, size, true);
         }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalSizeAMSSketch() {
+        new AMSSketch(3, 4);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalSizeCountMinSketch() {
+        new CountMinSketch(4, 3);
     }
 
     @Test

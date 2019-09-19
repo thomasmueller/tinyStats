@@ -7,7 +7,7 @@ import org.tinyStats.histogram.Histogram;
  */
 public class ExactHistogram implements Histogram {
 
-    private long[] counts;
+    private final long[] counts;
 
     public ExactHistogram(int bucketCount) {
         counts = new long[bucketCount];

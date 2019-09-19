@@ -47,6 +47,7 @@ public class MedianTest {
             int[] data = new int[maxSize];
             for (int size = 2; size < maxSize; size += size < 20 ? 1 : size / 5) {
                 ApproxMedian<Integer> med = type.construct(b);
+                assertTrue(med.getApproxMedian() == null);
                 for (int i = 0; i < size; i++) {
                     int x = sort == 0 ? i : sort == 1 ? size - i : (int) Hash.hash64(i);
                     med.add(x);

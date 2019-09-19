@@ -1,11 +1,13 @@
 package org.tinyStats.approxCount;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.tinyStats.approxCount.impl.ApproxCount8;
 import org.tinyStats.util.Hash;
 
 public class ApproxCountTest {
@@ -28,10 +30,18 @@ public class ApproxCountTest {
     }
 
     @Test
-    public void testAddRemove() {
+    public void addRemove() {
         int maxSize = 1_000_000;
         testAddRemove(ApproxCountType.EXACT, maxSize);
         testAddRemove(ApproxCountType.APPROX_LINEAR_1024, maxSize);
+
+        for (ApproxCountType t : new ApproxCountType[] { ApproxCountType.APPROX_4, ApproxCountType.APPROX_8,
+                ApproxCountType.APPROX_16, }) {
+            ApproxCount a = t.construct();
+            assertFalse(a.supportsRemove());
+            a.remove(0);
+            assertEquals(0, a.estimate());
+        }
     }
 
     static void testAddRemove(ApproxCountType type, int maxSize) {
