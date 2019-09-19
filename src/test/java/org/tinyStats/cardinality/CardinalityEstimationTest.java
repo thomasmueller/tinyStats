@@ -62,25 +62,17 @@ public class CardinalityEstimationTest {
             // System.out.println(type + " avg " + avg);
             double min, max;
             switch(type) {
-            case HYPER_LOG_LOG_M_16:
-                min = 36;
-                max = 37;
-                break;
             case HYPER_LOG_LOG_M_32:
-                min = 31;
-                max = 32;
+                min = 16;
+                max = 17;
                 break;
             case HYPER_LOG_LOG_M_64:
-                min = 28;
-                max = 29;
+                min = 9;
+                max = 10;
                 break;
             case HYPER_LOG_LOG_M_128:
-                min = 27;
-                max = 28;
-                break;
-            case HYPER_BIT_BIT:
-                min = 10_000;
-                max = 30_000;
+                min = 6;
+                max = 7;
                 break;
             case HYPER_BIT_BIT_64:
                 min = 500;
@@ -128,15 +120,15 @@ public class CardinalityEstimationTest {
         double sum = 0;
         int count = 0;
         for (long size = 1; size <= 20; size++) {
-            sum += test(type, size, testCount, false, exponent);
+            sum += test(type, size, testCount, debug, exponent);
             count++;
         }
         for (long size = 22; size <= 300; size += size / 5) {
-            sum += test(type, size, testCount, false, exponent);
+            sum += test(type, size, testCount, debug, exponent);
             count++;
         }
         for (long size = 400; size <= maxSize; size *= 2) {
-            sum += test(type, size, testCount, false, exponent);
+            sum += test(type, size, testCount, debug, exponent);
             count++;
         }
         return sum / count;

@@ -1,7 +1,6 @@
 package org.tinyStats.cardinality;
 
 import org.tinyStats.cardinality.CardinalityEstimator;
-import org.tinyStats.cardinality.impl.HyperBitBit;
 import org.tinyStats.cardinality.impl.HyperLogLog;
 import org.tinyStats.cardinality.impl.int64.HyperBitBit64;
 import org.tinyStats.cardinality.impl.int64.HyperLogLog2Linear64;
@@ -13,16 +12,10 @@ import org.tinyStats.cardinality.impl.int64.HyperLogLog4TailCut64;
 import org.tinyStats.cardinality.impl.int64.LinearCounting64;
 
 public enum CardinalityEstimatorType {
-    HYPER_LOG_LOG_M_16 {
+    HYPER_LOG_LOG_M_128 {
         @Override
         public CardinalityEstimator construct() {
-            return new HyperLogLog(16);
-        }
-    },
-    HYPER_LOG_LOG_M_32 {
-        @Override
-        public CardinalityEstimator construct() {
-            return new HyperLogLog(32);
+            return new HyperLogLog(128);
         }
     },
     HYPER_LOG_LOG_M_64 {
@@ -31,16 +24,10 @@ public enum CardinalityEstimatorType {
             return new HyperLogLog(64);
         }
     },
-    HYPER_LOG_LOG_M_128 {
+    HYPER_LOG_LOG_M_32 {
         @Override
         public CardinalityEstimator construct() {
-            return new HyperLogLog(128);
-        }
-    },
-    HYPER_BIT_BIT {
-        @Override
-        public CardinalityEstimator construct() {
-            return new HyperBitBit();
+            return new HyperLogLog(32);
         }
     },
     HYPER_BIT_BIT_64 {

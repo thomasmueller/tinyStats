@@ -17,9 +17,6 @@ public class HyperLogLog implements CardinalityEstimator {
         }
         this.m = m;
         switch (m) {
-        case 16:
-            am = 0.673;
-            break;
         case 32:
             am = 0.697;
             break;
@@ -31,11 +28,11 @@ public class HyperLogLog implements CardinalityEstimator {
         }
         this.counters = new byte[m];
     }
-    
+
     @Override
     public void add(long hash) {
         int i = (int) (hash & (m - 1));
-        counters[i] = (byte) Math.max(counters[i], Long.numberOfLeadingZeros(hash));
+        counters[i] = (byte) Math.max(counters[i], 1 + Long.numberOfLeadingZeros(hash));
     }
 
     @Override
@@ -44,12 +41,12 @@ public class HyperLogLog implements CardinalityEstimator {
         int countZero = 0;
         for(int c : counters) {
             countZero += c == 0 ? 1 : 0;
-            sum += 1. / (1L << ((c & 0xff) + 1));
+            sum += 1. / (1L << (c & 0xff));
         }
         long est = (long) (1. / sum * am * m * m);
-        if (est <= 5 * m) {
+        if (est <= 5 * m && countZero > 0) {
             // linear counting
-            est = (long) (2 * m * Math.log((double) m / countZero));
+            est = (long) (m * Math.log((double) m / countZero));
         }
         return Math.max(1, est);
     }

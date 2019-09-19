@@ -5,10 +5,10 @@ import org.tinyStats.cardinality.CardinalityEstimator;
 /**
  * Cardinality estimation with the HyperBitBit algorithm as described in a
  * presentation by Robert Sedgewick:
- * https://www.cs.princeton.edu/~rs/talks/AC11-Cardinality.pdf
- * but using only 64 bits of state.
- * 
- * It is very space saving, fast, and relatively simple. But unlike regular
+ * https://www.cs.princeton.edu/~rs/talks/AC11-Cardinality.pdf but using only 64
+ * bits of state.
+ *
+ * It is space saving, fast, and relatively simple. But unlike regular
  * HyperLogLog, it is quite "order-dependent": adding the same entry multiple
  * times can change the internal state, and so increase the estimation. The
  * effect depends on the order the entries are added. Adding the same set 10
@@ -17,7 +17,7 @@ import org.tinyStats.cardinality.CardinalityEstimator;
 public class HyperBitBit64 implements CardinalityEstimator {
 
     private final static long SK_MASK = (1L << 29) - 1;
-    
+
     private long data;
 
     @Override
