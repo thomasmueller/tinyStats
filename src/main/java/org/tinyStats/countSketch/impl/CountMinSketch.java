@@ -47,7 +47,6 @@ public class CountMinSketch implements CountSketch {
             }
         }
         long min = Long.MAX_VALUE;
-        count++;
         for (int i = 0; i < k; i++) {
             long x = data[i][(int) (hash & (m - 1))];
             min = Math.min(min, x);

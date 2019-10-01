@@ -8,12 +8,12 @@ import org.tinyStats.cardinality.CardinalityEstimator;
  * Improving the Performance of Cardinality Estimation of Large Data Streams"
  * from Qingjun Xiao, You Zhou, Shigang Chen, in
  * http://cse.seu.edu.cn/PersonalPage/csqjxiao/csqjxiao_files/papers/INFOCOM17.pdf
- * 
+ *
  * It uses linear counting for 60 bits, until 39 bits are set, then switches to
  * HyperLogLog. There, it uses 30 counters of 2 bits each (re-using the linear
  * counting data), and 4 bits for a base counter, which is increased if all
  * counters are larger than zero.
- * 
+ *
  * It is a bit "order-dependent", that is, adding the same entry multiple times
  * can change the internal state. However, unlike in HyperBitBit, here the
  * effect is smaller.
@@ -26,13 +26,13 @@ public class HyperLogLog2Linear64 implements CardinalityEstimator {
     public void add(long hash) {
         data = add(data, hash);
     }
-    
+
     @Override
     public long estimate() {
         return estimate(data);
-    }    
-    
-    static long add(long data, long hash) {
+    }
+
+    public static long add(long data, long hash) {
         int base = (int) (data & 0xf);
         if (base == 0) {
             int index = (int) (((hash & 0xffffffffL) * 30) >>> 32);
@@ -69,8 +69,8 @@ public class HyperLogLog2Linear64 implements CardinalityEstimator {
         }
         return data;
     }
-    
-    static long estimate(long data) {
+
+    public static long estimate(long data) {
         long base = data & 0xf;
         if (base == 0) {
             int x = Long.bitCount(data);
@@ -91,12 +91,12 @@ public class HyperLogLog2Linear64 implements CardinalityEstimator {
         if (base <= 1 && countZero > 2) {
             // linear counting
             int m = 30;
-            est = 1.91 * m * Math.log((double) m / countZero);            
+            est = 1.91 * m * Math.log((double) m / countZero);
             est = Math.min(est, 30 * 30 * 0.8 / sum);
         } else {
             est = 30 * 30 * 0.8 / sum;
         }
         return Math.max(1, (long) est);
     }
-    
+
 }
