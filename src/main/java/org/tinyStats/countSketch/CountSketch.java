@@ -15,6 +15,16 @@ public interface CountSketch {
     void add(long hash);
 
     /**
+     * Whether the returned estimates are percentages. If false, counts are
+     * returned.
+     *
+     * @return true if yes.
+     */
+    default boolean estimatePercent() {
+        return true;
+    }
+
+    /**
      * For a specific entry, get the estimated count (number of times the same entry
      * was added). This method might be a bit slow (use floating point operations
      * and loops).

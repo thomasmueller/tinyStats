@@ -5,9 +5,13 @@ import java.util.Arrays;
 import org.tinyStats.countSketch.CountSketch;
 
 /**
- * See "Finding frequent items in data streams"
+ * The count-min sketch, but returning percentages.
+ *
+ * See "Finding frequent items in data streams".
+ *
+ * This implementation returns percentages instead of counts.
  */
-public class CountMinSketch implements CountSketch {
+public class CountMinSketchPercent implements CountSketch {
 
     private int shift, m, k;
     private final long[][] data;
@@ -19,13 +23,16 @@ public class CountMinSketch implements CountSketch {
      * @param m the number of buckets per hash function (must be a power of 2)
      * @param k the number of hash functions
      */
-    public CountMinSketch(int k, int m) {
+    public CountMinSketchPercent(int k, int m) {
         if (Integer.bitCount(m) != 1) {
             throw new IllegalArgumentException("Must be a power of 2: " + m);
         }
         this.shift = Integer.bitCount(m - 1);
         this.m = m;
         this.k = k;
+        if (shift * k > 64) {
+            throw new IllegalArgumentException("Too many hash functions or buckets: " + k + " / " + m);
+        }
         data = new long[k][m];
     }
 

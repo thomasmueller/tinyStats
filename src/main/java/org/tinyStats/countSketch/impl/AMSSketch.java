@@ -7,10 +7,12 @@ import org.tinyStats.util.Hash;
 
 /**
  * Alon-Matias-Szegedy (AMS) sketches, from "The space complexity of
- * approximating the frequency moments"
+ * approximating the frequency moments".
  *
- * See also "Using the AMS Sketch to estimate inner products"
- * (can be used to estimate join sizes between tables, see
+ * This implementation returns percentages instead of counts.
+ *
+ * See also "Using the AMS Sketch to estimate inner products" (can be used to
+ * estimate join sizes between tables, see
  * https://github.com/twitter/algebird/issues/563
  *
  * https://github.com/mayconbordin/streaminer/blob/master/src/main/java/org/streaminer/stream/frequency/AMSSketch.java

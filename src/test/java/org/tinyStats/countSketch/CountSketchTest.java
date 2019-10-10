@@ -8,7 +8,8 @@ import java.util.Random;
 import org.junit.Test;
 import org.tinyStats.countSketch.CountSketch;
 import org.tinyStats.countSketch.impl.AMSSketch;
-import org.tinyStats.countSketch.impl.CountMinSketch;
+import org.tinyStats.countSketch.impl.CountMinMeanSketch;
+import org.tinyStats.countSketch.impl.CountMinSketchPercent;
 import org.tinyStats.util.Hash;
 
 public class CountSketchTest {
@@ -28,7 +29,27 @@ public class CountSketchTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalSizeCountMinSketch() {
-        new CountMinSketch(4, 3);
+        new CountMinSketchPercent(5, 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalSizeCountMinMeanSketch() {
+        new CountMinMeanSketch(5, 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgsCountMinSketch() {
+        new CountMinSketchPercent(15, 128);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgsCountMinMeanSketch() {
+        new CountMinMeanSketch(15, 128);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void evenHashCountMinMeanSketch() {
+        new CountMinMeanSketch(4, 4);
     }
 
     @Test
@@ -36,15 +57,18 @@ public class CountSketchTest {
         int size = 100_000;
         CountSketchError result;
 
+      result = test(CountSketchType.COUNT_MIN_SKETCH_PERCENT_5_16, size, false);
+      assertTrue(result.stdDevRepeatRate < 2);
+      assertTrue(result.stdDevEntryEstimation < 1);
+
+        result = test(CountSketchType.COUNT_MEAN_MIN_SKETCH_5_16, size, false);
+        assertTrue(result.stdDevEntryEstimation < 1);
+
         result = test(CountSketchType.MAJORITY_64, size, false);
         assertTrue(result.stdDevEntryEstimation < 15);
 
         result = test(CountSketchType.FREQUENT_2_64, size, false);
         assertTrue(result.stdDevEntryEstimation < 20);
-
-        result = test(CountSketchType.COUNT_MIN_SKETCH_4_16, size, false);
-        assertTrue(result.stdDevRepeatRate < 2);
-        assertTrue(result.stdDevEntryEstimation < 2);
 
         result = test(CountSketchType.AMS_SKETCH_8_8, size, false);
         assertTrue(result.stdDevRepeatRate < 2);
@@ -92,12 +116,18 @@ public class CountSketchTest {
                     countRepeatRate++;
                     for (int i = 0; i < 10; i++) {
                         long e = est.estimate(Hash.hash64(x + i));
-                        long expected = (int) (100. * counts[i] / size);
-                        if (debug) {
-                            System.out.println("  " + i + " est " + e + " real " + counts[i] + " "
-                                    + expected + "%");
+                        long expectedPercent = (int) (100. * counts[i] / size);
+                        long estPercent;
+                        if (est.estimatePercent()) {
+                            estPercent = e;
+                        } else {
+                            estPercent = (int) (100. * e / size);
                         }
-                        double err = e - expected;
+                        if (debug) {
+                            System.out.println("  " + i + " estimated " + e + " = " + estPercent + "%; real " + counts[i] + " = "
+                                    + expectedPercent + "%");
+                        }
+                        double err = estPercent - expectedPercent;
                         sumSquareErrorEntry += err * err;
                         countEntry++;
                     }
