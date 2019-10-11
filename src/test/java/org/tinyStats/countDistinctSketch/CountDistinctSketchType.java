@@ -1,13 +1,13 @@
 package org.tinyStats.countDistinctSketch;
 
-import org.tinyStats.countDistinctSketch.impl.HyperLogLogMinSketch;
+import org.tinyStats.countDistinctSketch.impl.HyperLogLogMinMeanSketch;
 
 public enum CountDistinctSketchType {
 
-    HYPER_LOG_LOG_64_SKETCH_4_16 {
+    HYPER_LOG_LOG_64_SKETCH_5_16 {
         @Override
         public CountDistinctSketch construct() {
-            return new HyperLogLogMinSketch(4, 16);
+            return new HyperLogLogMinMeanSketch(5, 16);
         }
     };
 

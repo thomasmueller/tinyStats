@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 import org.junit.Test;
+import org.tinyStats.countDistinctSketch.impl.HyperLogLogMinMeanSketch;
 import org.tinyStats.util.Hash;
 
 public class CountDistinctSketchTest {
@@ -24,17 +25,30 @@ public class CountDistinctSketchTest {
         int size = 100_000;
         CountDistinctSketchError result;
 
-        result = test(CountDistinctSketchType.HYPER_LOG_LOG_64_SKETCH_4_16, size, false);
+        result = test(CountDistinctSketchType.HYPER_LOG_LOG_64_SKETCH_5_16, size, false);
         // TODO
-        assertTrue(result.stdDevEntryEstimation < 1_000_000);
+        assertTrue(result.stdDevEntryEstimation < 15_000);
 
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalSize() {
+        new HyperLogLogMinMeanSketch(4, 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgs() {
+        new HyperLogLogMinMeanSketch(15, 128);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void evenHash() {
+        new HyperLogLogMinMeanSketch(4, 4);
     }
 
     private static CountDistinctSketchError test(CountDistinctSketchType type, int size, boolean debug) {
         Random r = new Random(42);
-        double sumSquareErrorRepeatRate = 0;
         double sumSquareErrorEntry = 0;
-        int countRepeatRate = 0;
         int countEntry = 0;
         for (double skew = 2; skew < 2000; skew *= 2) {
             for (int repeat = 1; repeat <= 2; repeat++) {
@@ -49,23 +63,15 @@ public class CountDistinctSketchTest {
                     }
                     CountDistinctSketch est = type.construct();
                     for (int i = 0; i < size; i++) {
-                        long key = Hash.hash64(x + data[i * 2]);
-                        long value = Hash.hash64(x + data[i * 2 + 1]);
+                        long key = Hash.hash64(x + (data[i] >>> 32));
+                        long value = Hash.hash64(x + (int) data[i]);
                         est.add(key, value);
                     }
                     int[] countDistinct = getCountDistinct(data);
-                    int expectedRepeatRate = 0;
-                    for (int i = 0; i < 10; i++) {
-                        expectedRepeatRate += 100 * countDistinct[i] / size / Math.pow(2, i);
-                    }
-                    double er = est.estimateRepeatRate();
                     if (debug) {
                         System.out.println("skew " + skew + " repeat " + repeat + " sort " + sort + "; count(0):  "
-                                + countDistinct[0] + " est repeat " + er + " expected repeat " + expectedRepeatRate);
+                                + countDistinct[0]);
                     }
-                    double errRepeat = er - expectedRepeatRate;
-                    sumSquareErrorRepeatRate += errRepeat * errRepeat;
-                    countRepeatRate++;
                     for (int i = 0; i < 10; i++) {
                         long e = est.estimate(Hash.hash64(x + i));
                         long expected = (int) (100. * countDistinct[i] / size);
@@ -81,7 +87,6 @@ public class CountDistinctSketchTest {
             }
         }
         CountDistinctSketchError result = new CountDistinctSketchError();
-        result.stdDevRepeatRate = Math.sqrt(sumSquareErrorRepeatRate / countRepeatRate);
         result.stdDevEntryEstimation = Math.sqrt(sumSquareErrorEntry / countEntry);
         return result;
     }
@@ -98,9 +103,9 @@ public class CountDistinctSketchTest {
         int[] countDistinct = new int[10];
         for (int i = 0; i < 10; i++) {
             HashSet<Long> values = new HashSet<>();
-            for (int j = 0; j < data.length; j += 2) {
-                long key = data[j];
-                long value = data[j + 1];
+            for (int j = 0; j < data.length; j++) {
+                long key = (data[j] >>> 32);
+                long value = (int) data[j];
                 if (key == i) {
                     values.add(value);
                 }
@@ -111,25 +116,23 @@ public class CountDistinctSketchTest {
     }
 
     static long[] randomKeyValueData(int size, double skew, Random r, int repeat) {
-        long[] data = new long[size * 2];
+        long[] data = new long[size];
         for (int i = 0; i < size; i++) {
             long m = (long) (size * Math.pow(r.nextDouble(), skew));
             if (repeat > 1) {
                 m = (m / repeat * repeat) + (r.nextInt(repeat));
             }
-            data[i * 2] = m;
-            data[i * 2 + 1] = i;
+            data[i] = (m << 32) | i;
         }
         return data;
     }
 
     static class CountDistinctSketchError {
-        double stdDevRepeatRate;
         double stdDevEntryEstimation;
 
         @Override
         public String toString() {
-            return "repeat " + stdDevRepeatRate + " entry " + stdDevEntryEstimation;
+            return "entry " + stdDevEntryEstimation;
         }
     }
 

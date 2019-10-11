@@ -28,13 +28,4 @@ public interface CountDistinctSketch {
      */
     long estimate(long keyHash);
 
-    /**
-     * Estimate the repeat rate (also called second frequency moment, F2, or
-     * homogeneity). A low value means each distinct key has roughly the same number
-     * of distinct values, and a high value means the distribution is very skewed.
-     *
-     * @return the repeat rate, or 0 if not known
-     */
-    long estimateRepeatRate();
-
 }
