@@ -7,10 +7,13 @@ import org.tinyStats.countSketch.CountSketch;
 /**
  * The count-min-mean sketch. It has lower bias than the count-min sketch if
  * there are many entries and the number of buckets and hash functions is small.
- * The minimum of the mean and the min is returned.
+ * The minimum of the mean and count-min is returned.
  *
  * See "New Estimation Algorithms for Streaming Data: Count-min Can Do More" and
  * "Sketch algorithms for estimating point queries in NLP".
+ *
+ * Conservative updates and approximate counter are not used here, see
+ * "Count-Min-Log sketch: Approximately counting with approximate counters".
  */
 public class CountMinMeanSketch implements CountSketch {
 
@@ -32,11 +35,11 @@ public class CountMinMeanSketch implements CountSketch {
             throw new IllegalArgumentException("Must be odd: " + k);
         }
         this.shift = Integer.bitCount(m - 1);
-        this.m = m;
-        this.k = k;
         if (shift * k > 64) {
             throw new IllegalArgumentException("Too many hash functions or buckets: " + k + " / " + m);
         }
+        this.m = m;
+        this.k = k;
         data = new long[k][m];
     }
 

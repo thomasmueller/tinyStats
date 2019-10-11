@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.tinyStats.approxCount.impl.ApproxCount8;
 import org.tinyStats.util.Hash;
 
 public class ApproxCountTest {
