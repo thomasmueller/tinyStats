@@ -8,6 +8,8 @@ import org.tinyStats.util.Hash;
 
 /**
  * The combination of HyperLogLog and count-min-mean sketch.
+ *
+ * See "Sketch Techniques for Approximate Query Processing" section 1.5.2.2 "Combinations of Sketches".
  */
 public class HyperLogLogMinMeanSketch implements CountDistinctSketch {
 

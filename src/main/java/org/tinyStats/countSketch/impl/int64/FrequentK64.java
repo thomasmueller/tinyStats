@@ -5,8 +5,8 @@ import java.util.Arrays;
 import org.tinyStats.countSketch.CountSketch;
 
 /**
- * The "frequent" algorithm, which is similar to the "majority" algorithm, but
- * supports more than 1 entry.
+ * The Misra-Gries algorithm (also called "frequent"), which is similar to the
+ * "majority" algorithm, but supports more than 1 entry.
  *
  * For each frequent entry, 64 bits are needed (32 bit for the counter, 32 bit
  * for the hash).
