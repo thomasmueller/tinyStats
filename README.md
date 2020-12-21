@@ -10,6 +10,7 @@ Statistics about data (streaming processing):
 * Minimum and maximum.
 * Approximate median using the remedian algorithm (somewhat improved).
 * Random sample using the reservoir sampling algorithm.
+* Set reconciliation using IBLT (invertible Bloom lookup table), including a file repair tool similar to PAR2.
 
 ## Similar Libraries
 
