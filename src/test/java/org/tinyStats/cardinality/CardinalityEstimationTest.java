@@ -63,44 +63,44 @@ public class CardinalityEstimationTest {
             double min, max;
             switch(type) {
             case HYPER_LOG_LOG_M_32:
-                min = 16;
-                max = 17;
+                min = 15;
+                max = 16;
                 break;
             case HYPER_LOG_LOG_M_64:
-                min = 9;
-                max = 10;
+                min = 10;
+                max = 11;
                 break;
             case HYPER_LOG_LOG_M_128:
-                min = 6;
-                max = 7;
+                min = 7;
+                max = 8;
                 break;
             case HYPER_BIT_BIT_64:
                 min = 500;
                 max = 700;
                 break;
             case HYPER_LOG_LOG_5_BIT_64:
-                min = 40;
-                max = 50;
+                min = 30;
+                max = 40;
                 break;
             case LINEAR_COUNTING_64:
                 min = 30;
                 max = 40;
                 break;
             case HYPER_LOG_LOG_2_TAILCUT_64:
-                min = 19;
-                max = 20;
+                min = 18;
+                max = 19;
                 break;
             case HYPER_LOG_LOG_3_TAILCUT_64:
-                min = 22;
-                max = 23;
+                min = 21;
+                max = 22;
                 break;
             case HYPER_LOG_LOG_4_TAILCUT_64:
                 min = 24;
-                max = 25;
+                max = 26;
                 break;
             case HYPER_LOG_LOG_2_LINEAR_64:
-                min = 16;
-                max = 17;
+                min = 15;
+                max = 16;
                 break;
             case HYPER_LOG_LOG_3_LINEAR_64:
                 min = 16;

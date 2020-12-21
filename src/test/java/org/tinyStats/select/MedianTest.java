@@ -1,12 +1,13 @@
-package org.tinyStats.median;
+package org.tinyStats.select;
 
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.tinyStats.median.impl.RemedianPlus;
-import org.tinyStats.median.impl.RemedianSimple;
+import org.tinyStats.select.ApproxMedian;
+import org.tinyStats.select.impl.RemedianPlus;
+import org.tinyStats.select.impl.RemedianSimple;
 import org.tinyStats.util.Hash;
 
 public class MedianTest {

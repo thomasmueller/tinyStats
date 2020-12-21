@@ -1,4 +1,4 @@
-package org.tinyStats.median;
+package org.tinyStats.select;
 
 /**
  * Get the approximate median of a stream.

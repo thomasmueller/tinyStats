@@ -1,14 +1,15 @@
-package org.tinyStats.median.impl;
+package org.tinyStats.select.impl;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import org.tinyStats.median.ApproxMedian;
+import org.tinyStats.select.ApproxMedian;
 
 /**
- * An improved variant of the remedian algorithm. See the papers "The Remedian -
- * A Robust Averaging Method for Large Data Sets" and "Further analysis of the
- * remedian algorithm".
+ * An improved variant of the remedian algorithm.
+ *
+ * See the papers "The Remedian - A Robust Averaging Method for Large Data Sets"
+ * and "Further analysis of the remedian algorithm".
  *
  * This implementation supports partially sorted and sorted input much better
  * than the original algorithm, at the cost of slightly higher memory usage,

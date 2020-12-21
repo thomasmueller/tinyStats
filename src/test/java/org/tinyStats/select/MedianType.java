@@ -1,7 +1,8 @@
-package org.tinyStats.median;
+package org.tinyStats.select;
 
-import org.tinyStats.median.impl.RemedianSimple;
-import org.tinyStats.median.impl.RemedianPlus;
+import org.tinyStats.select.ApproxMedian;
+import org.tinyStats.select.impl.RemedianPlus;
+import org.tinyStats.select.impl.RemedianSimple;
 
 public enum MedianType {
     REMEDIAN_SIMPLE {

@@ -58,7 +58,7 @@ public class CountSketchTest {
         CountSketchError result;
 
       result = test(CountSketchType.COUNT_MIN_SKETCH_PERCENT_5_16, size, false);
-      assertTrue(result.stdDevRepeatRate < 2);
+      assertTrue(result.stdDevRepeatRate < 3);
       assertTrue(result.stdDevEntryEstimation < 1);
 
         result = test(CountSketchType.COUNT_MEAN_MIN_SKETCH_5_16, size, false);

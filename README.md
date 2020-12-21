@@ -15,3 +15,4 @@ Statistics about data (streaming processing):
 
 * https://github.com/mayconbordin/streaminer
 * https://github.com/twitter/algebird
+* https://datasketches.apache.org/
